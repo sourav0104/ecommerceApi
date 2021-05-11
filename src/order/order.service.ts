@@ -22,14 +22,21 @@ export class OrderService {
     });
   }
 
-  findAll() {
-    return this.orderRepository.find({relations:['userId']});
+
+  
+  findAll(userId: string) {
+    return this.orderRepository.find({where:{userId: userId }}).then((data) => {
+      if (data.length==0) throw new NotFoundException();
+      return data;
+    });
   }
 
-  findOne(id: number) {
-    return this.orderRepository.findOne(id)
-    .then((data)=>{
-      if(!data) throw new NotFoundException();
+ 
+  findOne(userId: string, orderId: number) {
+    return this.orderRepository.findOne({
+      where: { userId: userId, orderId: orderId }
+    }).then((data) => {
+      if (!data) throw new NotFoundException();
       return data;
     });
   }

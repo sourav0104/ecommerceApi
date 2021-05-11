@@ -22,8 +22,9 @@ export class PaymentService {
     });
   }
 
-  findAll() {
-    return this.paymentRepository.find({relations:['userId']});
+  async findAll(userId:string) {
+    const user=await this.userService.findById(userId)
+    return this.paymentRepository.find({where:{userId:user}});
   }
 
   findOne(id: number) {

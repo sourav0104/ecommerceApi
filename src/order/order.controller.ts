@@ -18,15 +18,15 @@ export class OrderController {
   }
 
   @Get()
-  findAll() {
-    return this.orderService.findAll();
+  findAll(@Request() req:any) {
+    return this.orderService.findAll(req.user.userId);
   }
 
   @ApiNotFoundResponse({ description: 'No data is found for the specified ID' })
   @ApiOkResponse({ description: 'Order Data found' })
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.orderService.findOne(+id);
+  findOne(@Request() req:any,@Param('id') id: string) {
+    return this.orderService.findOne(req.user.userId,+id);
   }
 
   @Patch(':id')

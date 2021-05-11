@@ -5,7 +5,7 @@ import { JwtStrategy } from 'src/auth/jwt.strategy';
 import { Order } from 'src/order/entities/order.entity';
 // import { OrderService } from 'src/order/order.service';
 import { Product } from 'src/product/entities/product.entity';
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn, JoinTable } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn, JoinTable, OneToMany } from 'typeorm';
 
 @Entity({name:'orderdetails'})
 @UseGuards(JwtAuthGuard)
@@ -35,7 +35,6 @@ export class Orderdetail {
     @JoinColumn({name:'userId'})
     userId:UserEntity;
 
-    // @JoinTable()
-    // orderId:Order[]
+   
 
 }

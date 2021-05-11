@@ -23,33 +23,27 @@ export class OrderdetailsService {
 
 async create(userId:string,orderId:number,createOrderdetailDto: CreateOrderdetailDto) {
     const user= await this.userService.findById(userId)
-    const order= await this.orderService.findOne(orderId)
-    
-    // const product = await this.productService.findOne(productId)
-    // const entityManager = getManager();
-    // const order=await entityManager.findOne()
-    // const repository = connection.getRepository()
-    // const order=await this.orderDetailRepository.find(orderId)
-
+  
 
     return this.orderDetailRepository.save({
       orderName:createOrderdetailDto.name,
       orderQuntity:createOrderdetailDto.qty,
       userId:user,
-      orderId:order,
-      
-
+      // orderId:order,
     });
   }
 
-  async findAll(userId:string) {
-    const user=await this.userService.findById(userId)
-    return this.orderDetailRepository.find({where:{userId:user}});
+  findAll(userId: string, orderId: number) {
+    return this.orderDetailRepository.find({
+      where: { userId:userId, orderId: orderId }
+    }).then((data) => {
+      if (data.length == 0) throw new NotFoundException();
+      return data;
+    });
   }
 
-  // findAll() {
-  //   return this.orderDetailRepository.find({relations:['userId']});
-  // }
+  
+  
 
   findOne(id: number) {
     return this.orderDetailRepository.findOne(id)
