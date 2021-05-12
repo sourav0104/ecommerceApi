@@ -16,7 +16,7 @@ export class Orderdetail {
     orderDetailId:number;
 
     @Column({})
-    orderQuntity:number;
+    orderQuantity:number;
 
     @Column()
     orderName:string
@@ -34,6 +34,8 @@ export class Orderdetail {
     @ManyToOne(()=>UserEntity,(user)=>user.userId)
     @JoinColumn({name:'userId'})
     userId:UserEntity;
+
+    
 
    
 

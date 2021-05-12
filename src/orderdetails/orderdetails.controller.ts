@@ -14,7 +14,7 @@ export class OrderdetailsController {
 
   @Post()
   create(@Request() req:any,@Body() createOrderdetailDto: CreateOrderdetailDto) {
-    return this.orderdetailsService.create(req.user.userId,req.orderId,createOrderdetailDto);
+    return this.orderdetailsService.create(req.user.userId,req.body.orderId,req.body.productId,createOrderdetailDto);
   }
 
   @Get()
@@ -23,8 +23,8 @@ export class OrderdetailsController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.orderdetailsService.findOne(+id);
+  findOne(@Request() req:any,@Param('id') id: string) {
+    return this.orderdetailsService.findOne(req.user.userId,+id);
   }
 
   @Patch(':id')

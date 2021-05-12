@@ -13,12 +13,12 @@ export class PaymentController {
 
   @Post()
   create(@Request() req:any,@Body() createPaymentDto: CreatePaymentDto) {
-    return this.paymentService.create(req.user.userId,createPaymentDto);
+    return this.paymentService.create(req.user.userId,req.body.orderId,createPaymentDto);
   }
 
   @Get()
   findAll(@Request() req:any) {
-    return this.paymentService.findAll(req.user.userId);
+    return this.paymentService.findAll(req.user.userId,req.body.orderId);
   }
 
   @Get(':id')

@@ -1,4 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { IsNotEmpty } from "class-validator";
 
 export class CreateOrderDto {
 
@@ -10,9 +11,11 @@ export class CreateOrderDto {
     sdate?:Date;
 
     @ApiProperty()
+    @IsNotEmpty()
     amount:number;
 
     @ApiProperty()
+    @IsNotEmpty()
     status:string;
 
     @ApiProperty()

@@ -3,6 +3,7 @@ import { UserEntity } from 'src/auth/entities/user.entity';
 import { JwtAuthGuard } from 'src/auth/jwt.guard';
 import { JwtStrategy } from 'src/auth/jwt.strategy';
 import { Orderdetail } from 'src/orderdetails/entities/orderdetail.entity';
+import { Payment } from 'src/payment/entities/payment.entity';
 import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn, OneToMany } from 'typeorm';
 // import {Orderdetails} from 'src/orderdetails/orderdetails.service';
 
@@ -16,14 +17,17 @@ export class Order {
     @Column({default:0,type:'decimal',nullable:false})
     orderAmount:number;
 
-    @Column({ type: 'datetime',nullable:true,default: ()=>'CURRENT_TIMESTAMP' })
+    @Column({ type: 'datetime', default: () => 'CURRENT_TIMESTAMP' })
     orderDate: Date;
 
     @Column({ type: 'datetime',nullable:true })
-    shippingDate: Date;
+    orderShippingDate: Date;
 
     @Column({default:'pending',nullable:false})
     orderStatus:string;
+
+    @Column("simple-array")
+    productDetails:string[];
 
   
     @OneToMany(() => Orderdetail, (orderdetail) => orderdetail.orderId)
@@ -32,4 +36,9 @@ export class Order {
     @ManyToOne(()=>UserEntity,(user)=>user.userId)
     @JoinColumn({name:'userId'})
     userId:UserEntity;
+
+    @OneToMany(() => Payment, (payment) => payment.paymentId)
+    payment: Payment[];
+
+    
 }

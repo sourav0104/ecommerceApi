@@ -13,23 +13,26 @@ import { ProductService } from 'src/product/product.service';
 
 @Injectable()
 export class OrderdetailsService {
-  orderRepository: any;
+
   constructor(
     @InjectRepository(Orderdetail) private orderDetailRepository:Repository<Orderdetail>,
-    private userService:UserService,private orderService:OrderService,
+    private userService:UserService,private orderService:OrderService,  private productService: ProductService,
     // private productService:ProductService,
     
   ){}
 
-async create(userId:string,orderId:number,createOrderdetailDto: CreateOrderdetailDto) {
+async create(userId:string,orderId:number,productId:number,createOrderdetailDto: CreateOrderdetailDto) {
     const user= await this.userService.findById(userId)
-  
+    const order=await this.orderService.findOne(userId,orderId)
+    const product=await this.productService.findOne(productId)
+    console.log(order,product);
 
     return this.orderDetailRepository.save({
       orderName:createOrderdetailDto.name,
-      orderQuntity:createOrderdetailDto.qty,
+      orderQuantity:createOrderdetailDto.qty,
       userId:user,
-      // orderId:order,
+      orderId:order,
+      productId:product,
     });
   }
 
@@ -41,17 +44,14 @@ async create(userId:string,orderId:number,createOrderdetailDto: CreateOrderdetai
       return data;
     });
   }
-
   
-  
-
-  findOne(id: number) {
-    return this.orderDetailRepository.findOne(id)
-    .then((data)=>{
-      if(!data) throw new NotFoundException();
+ findOne(userId: string, orderDetailId: number) {
+    return this.orderDetailRepository.findOne({
+      where: { userId: userId, orderDetailId: orderDetailId }
+    }).then((data) => {
+      if (!data) throw new NotFoundException();
       return data;
-    })
-    ;
+    });
   }
 
   update(id: number, updateOrderdetailDto: UpdateOrderdetailDto) {
@@ -59,7 +59,7 @@ async create(userId:string,orderId:number,createOrderdetailDto: CreateOrderdetai
       {orderDetailId:id},
       {
         orderName:updateOrderdetailDto.name,
-        orderQuntity:updateOrderdetailDto.qty,
+        orderQuantity:updateOrderdetailDto.qty,
       }
     );
   }
