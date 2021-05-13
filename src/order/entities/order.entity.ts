@@ -4,7 +4,7 @@ import { JwtAuthGuard } from 'src/auth/jwt.guard';
 import { JwtStrategy } from 'src/auth/jwt.strategy';
 import { Orderdetail } from 'src/orderdetails/entities/orderdetail.entity';
 import { Payment } from 'src/payment/entities/payment.entity';
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn, OneToMany } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn, OneToMany, OneToOne } from 'typeorm';
 // import {Orderdetails} from 'src/orderdetails/orderdetails.service';
 
 @Entity({name:"orders"})
@@ -27,7 +27,7 @@ export class Order {
     orderStatus:string;
 
     @Column("simple-array")
-    productDetails:string[];
+    productData:string[];
 
   
     @OneToMany(() => Orderdetail, (orderdetail) => orderdetail.orderId)
@@ -37,7 +37,7 @@ export class Order {
     @JoinColumn({name:'userId'})
     userId:UserEntity;
 
-    @OneToMany(() => Payment, (payment) => payment.paymentId)
+    @OneToOne(() => Payment, (payment) => payment.paymentId)
     payment: Payment[];
 
     

@@ -19,6 +19,10 @@ export class CreateOrderDto {
     status:string;
 
     @ApiProperty()
+    @IsNotEmpty()
+    productDetails:string[];
+
+    @ApiProperty()
     user:string;
     
     

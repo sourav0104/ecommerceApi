@@ -12,10 +12,12 @@ export class OrderService {
     @InjectRepository(Order) private orderRepository:Repository<Order>,
     private userService:UserService
   ){}
+  
   async create(userId:string,createOrderDto: CreateOrderDto) {
     const user= await this.userService.findById(userId)
     return this.orderRepository.save({
       orderAmount: createOrderDto.amount,
+      productData: createOrderDto.productDetails,
       orderStatus: createOrderDto.status,
       userId:user,
     });
