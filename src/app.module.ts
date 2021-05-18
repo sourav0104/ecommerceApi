@@ -6,7 +6,7 @@ import { ProductModule } from './product/product.module';
 import { AuthModule } from './auth/auth.module';
 import { AddressModule } from './address/address.module';
 import { OrderModule } from './order/order.module';
-import { OrderdetailsModule } from './orderdetails/orderdetails.module';
+import { OrderDetailModule } from './order-detail/order-detail.module';
 import { PaymentModule } from './payment/payment.module';
 
 @Module({
@@ -17,7 +17,7 @@ import { PaymentModule } from './payment/payment.module';
     AuthModule,
     AddressModule,
     OrderModule,
-    OrderdetailsModule,
+    OrderDetailModule,
     PaymentModule,
   ],
   controllers: [

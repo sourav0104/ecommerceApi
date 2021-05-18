@@ -1,61 +1,66 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { UserService } from 'src/auth/user/user.service';
-import { Repository } from 'typeorm';
-import { CreateOrderDto } from './dto/create-order.dto';
-import { UpdateOrderDto } from './dto/update-order.dto';
-import { Order } from './entities/order.entity';
+import { HttpException, Injectable, NotFoundException } from "@nestjs/common";
+import { InjectRepository } from "@nestjs/typeorm";
+import { UserEntity } from "src/auth/entities/user.entity";
+import { UserService } from "src/auth/user/user.service";
+import { ProductService } from "src/product/product.service";
+import { getConnection, getRepository, Repository } from "typeorm";
+import { CreateOrderDto } from "./dto/create-order.dto";
+import { UpdateOrderDto } from "./dto/update-order.dto";
+import { Order } from "./entities/order.entity";
 
 @Injectable()
 export class OrderService {
-  constructor(
-    @InjectRepository(Order) private orderRepository:Repository<Order>,
-    private userService:UserService
-  ){}
-  
-  async create(userId:string,createOrderDto: CreateOrderDto) {
-    const user= await this.userService.findById(userId)
-    return this.orderRepository.save({
-      orderAmount: createOrderDto.amount,
-      productData: createOrderDto.productDetails,
-      orderStatus: createOrderDto.status,
-      userId:user,
-    });
-  }
+    constructor(
+        @InjectRepository(Order) private orderRepository: Repository<Order>,
+        private userService: UserService,
+        private productService: ProductService
+    ) {}
 
+    async create(createOrderDto: CreateOrderDto, userId: string) {
+        const user = await this.userService.findById(userId);
+        return this.orderRepository.save({
+            totalAmount: createOrderDto.totalAmount,
+            orderDate: createOrderDto.orderDate,
+            shoppingDate: createOrderDto.shoppingDate,
+            products: createOrderDto.products,
+            user: user,
+        });
+    }
 
-  
-  findAll(userId: string) {
-    return this.orderRepository.find({where:{userId: userId }}).then((data) => {
-      if (data.length==0) throw new NotFoundException();
-      return data;
-    });
-  }
+    findAll() {
+        return this.orderRepository.find({ relations: ["user", "address"] });
+    }
 
- 
-  findOne(userId: string, orderId: number) {
-    return this.orderRepository.findOne({
-      where: { userId: userId, orderId: orderId }
-    }).then((data) => {
-      if (!data) throw new NotFoundException();
-      return data;
-    });
-  }
+    async findOne(id: number) {
+        // return this.orderRepository.findOne(id).then((data) => {
+        //     if (!data) throw new NotFoundException(); //throw new HttpException({}, 204);
+        //     return data;
+        // });
+        // const a = await getRepository(UserEntity)
+        //     .createQueryBuilder("user")
+        //     .from(this.userRepo, "user")
+        //     .where("UserService.userId =:id");
+        // const a = await UserService.fi(id)
+        // console.log(a);
+    }
 
-  update(id: number, updateOrderDto: UpdateOrderDto) {
-    return this.orderRepository.update(
-      {orderId:id},
-      {
-        orderAmount:updateOrderDto.amount,
-        orderStatus:updateOrderDto.status,
-      }
-    );
-  }
+    update(id: number, updateOrderDto: UpdateOrderDto) {
+        return this.orderRepository.update(
+            { orderId: id },
+            {
+                isCancelled: updateOrderDto.isCancelled,
+            }
+        );
+    }
 
+    //     remove(id: number) {
+    //         return `This action removes a #${id} order`;
+    //     }
 
-  remove(id: number) {
-    return this.orderRepository.delete({
-      orderId:id
-    });
-  }
+    async findById(id: string) {
+        return this.orderRepository.find({
+            where: { user: id },
+            relations: ["user", "address"],
+        });
+    }
 }

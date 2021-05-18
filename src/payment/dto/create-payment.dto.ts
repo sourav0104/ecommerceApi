@@ -1,21 +1,18 @@
-import { ApiProperty } from '@nestjs/swagger';
-import { IsNotEmpty } from "class-validator";
+import { ApiProperty } from "@nestjs/swagger";
 
 export class CreatePaymentDto {
-  
-    @ApiProperty()
-    @IsNotEmpty()
-    orderId:number;
+    @ApiProperty({ example: "payment" })
+    amountPaid: number;
 
     @ApiProperty()
-    paystatus:string;
+    paymentDate: Date;
 
     @ApiProperty()
-    payamount:number;
+    paymentMethod?: string;
 
     @ApiProperty()
-    paymethod?:string
+    paymentType?: string;
 
     @ApiProperty()
-    user:string;
+    user: string;
 }

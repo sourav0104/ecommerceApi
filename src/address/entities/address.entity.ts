@@ -1,39 +1,48 @@
-import { UserEntity } from 'src/auth/entities/user.entity';
+import { type } from "node:os";
+import { join } from "node:path";
+import { UserEntity } from "src/auth/entities/user.entity";
 import {
-  BeforeInsert,
-  Column,
-  Entity,
-  ManyToOne,
-  PrimaryGeneratedColumn,
-  JoinColumn,
-} from 'typeorm';
+    BeforeInsert,
+    Column,
+    Entity,
+    JoinColumn,
+    ManyToOne,
+    PrimaryGeneratedColumn,
+} from "typeorm";
 
 @Entity()
 export class Address {
-  @PrimaryGeneratedColumn()
-  id: number;
+    @PrimaryGeneratedColumn()
+    id: number;
 
-  @Column()
-  line1: string;
+    @Column({ nullable: true })
+    firstName: string;
 
-  @Column()
-  line2: string;
+    @Column({ nullable: true })
+    lastName: string;
 
-  @Column()
-  city: string;
+    @Column({ width: 12, nullable: true })
+    mobileNo: string;
 
-  @Column()
-  state: string;
+    @Column()
+    line1: string;
 
-  @Column({ type: 'integer',nullable:true })
-  pincode: number;
+    @Column({ nullable: true })
+    line2: string;
 
-  @Column({ type: 'datetime' })
-  createdAt: string;
+    @Column()
+    city: string;
 
-  // many addresses will be for one userentity
-  @ManyToOne((type) => UserEntity, (user) => user.userId)
-  @JoinColumn({name:'userId'})
-  user: UserEntity;
-  
+    @Column()
+    state: string;
+
+    @Column({ type: "integer" })
+    pincode: number;
+
+    @Column({ type: "datetime" })
+    createdAt: string;
+
+    // many addresses will be for one userentity
+    @ManyToOne((type) => UserEntity, (user) => user.userId)
+    user: UserEntity;
 }

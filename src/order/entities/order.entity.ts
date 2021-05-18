@@ -1,44 +1,42 @@
-import { UseGuards } from '@nestjs/common';
-import { UserEntity } from 'src/auth/entities/user.entity';
-import { JwtAuthGuard } from 'src/auth/jwt.guard';
-import { JwtStrategy } from 'src/auth/jwt.strategy';
-import { Orderdetail } from 'src/orderdetails/entities/orderdetail.entity';
-import { Payment } from 'src/payment/entities/payment.entity';
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn, OneToMany, OneToOne } from 'typeorm';
-// import {Orderdetails} from 'src/orderdetails/orderdetails.service';
+import { Address } from "src/address/entities/address.entity";
+import { UserEntity } from "src/auth/entities/user.entity";
+import {
+    Column,
+    Entity,
+    JoinColumn,
+    ManyToOne,
+    OneToMany,
+    PrimaryGeneratedColumn,
+} from "typeorm";
 
-@Entity({name:"orders"})
-@UseGuards(JwtAuthGuard)
-@UseGuards(JwtStrategy)
+@Entity({ name: "order" })
 export class Order {
     @PrimaryGeneratedColumn()
-    orderId:number;
+    orderId: number;
 
-    @Column({default:0,type:'decimal',nullable:false})
-    orderAmount:number;
+    @Column({ nullable: true, precision: 10 })
+    totalAmount: number;
 
-    @Column({ type: 'datetime', default: () => 'CURRENT_TIMESTAMP' })
+    @Column({ nullable: true, default: () => "CURRENT_TIMESTAMP" })
     orderDate: Date;
 
-    @Column({ type: 'datetime',nullable:true })
-    orderShippingDate: Date;
+    @Column({ nullable: true, default: () => "CURRENT_TIMESTAMP" })
+    shoppingDate: Date;
 
-    @Column({default:'pending',nullable:false})
-    orderStatus:string;
+    @Column({ default: "pending" })
+    status: string;
 
-    @Column("simple-array")
-    productData:string[];
+    @Column({ length: 10000 })
+    products: string;
 
-  
-    @OneToMany(() => Orderdetail, (orderdetail) => orderdetail.orderId)
-    orderdetail: Orderdetail[];
+    @Column({ default: false, nullable: false })
+    isCancelled: boolean;
 
-    @ManyToOne(()=>UserEntity,(user)=>user.userId)
-    @JoinColumn({name:'userId'})
-    userId:UserEntity;
+    @ManyToOne(() => UserEntity, (user) => user.userId)
+    @JoinColumn({ name: "userId" })
+    user: UserEntity;
 
-    @OneToOne(() => Payment, (payment) => payment.paymentId)
-    payment: Payment[];
-
-    
+    @OneToMany(() => Address, (address) => address.user)
+    @JoinColumn({ name: "address" })
+    address: Address;
 }

@@ -1,30 +1,24 @@
-import { ApiProperty } from '@nestjs/swagger';
-import { IsNotEmpty } from "class-validator";
+import { ApiProperty } from "@nestjs/swagger";
 
 export class CreateOrderDto {
-
-
-    @ApiProperty({required:false})
-    odate?:Date;
-
-    @ApiProperty({required:false})
-    sdate?:Date;
+    @ApiProperty({ example: "order" })
+    totalAmount: number;
 
     @ApiProperty()
-    @IsNotEmpty()
-    amount:number;
+    orderDate: Date;
 
     @ApiProperty()
-    @IsNotEmpty()
-    status:string;
+    shoppingDate: Date;
 
     @ApiProperty()
-    @IsNotEmpty()
-    productDetails:string[];
+    products: string;
 
     @ApiProperty()
-    user:string;
-    
-    
+    qty: string;
+
+    @ApiProperty()
+    status: string;
+
+    @ApiProperty()
+    user: string;
 }
-
