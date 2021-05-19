@@ -1,8 +1,11 @@
 import { HttpException, Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
+import { from } from "rxjs";
 import { Repository } from "typeorm";
 import { CreateUserDto } from "../dto/create-user.dto";
 import { UserEntity } from "../entities/user.entity";
+import { switchMap } from "rxjs/operators";
+import { UpdateUserDto } from "../dto/update-user.dto";
 
 @Injectable()
 export class UserService {
@@ -39,4 +42,16 @@ export class UserService {
         });
         return this.userRepo.save(user);
     }
+
+    updateOne(id: string, user: UpdateUserDto) {
+        return from(this.userRepo.update(id, user)).pipe(
+            switchMap(() => this.findById(id))
+        );
+    }
 }
+
+// function switchMap(
+//     arg0: () => Promise<UserEntity>
+// ): import("rxjs").OperatorFunction<import("typeorm").UpdateResult, unknown> {
+//     throw new Error("Function not implemented.");
+// }

@@ -8,6 +8,7 @@ import { AddressModule } from './address/address.module';
 import { OrderModule } from './order/order.module';
 import { OrderDetailModule } from './order-detail/order-detail.module';
 import { PaymentModule } from './payment/payment.module';
+import { ThrottlerModule } from '@nestjs/throttler';
 
 @Module({
   imports: [
@@ -19,6 +20,10 @@ import { PaymentModule } from './payment/payment.module';
     OrderModule,
     OrderDetailModule,
     PaymentModule,
+    ThrottlerModule.forRoot({
+      ttl: 60,
+      limit: 10,
+    }),
   ],
   controllers: [
     // register the controller
@@ -28,5 +33,6 @@ import { PaymentModule } from './payment/payment.module';
     // register the services
     AppService,
   ],
+  
 })
 export class AppModule {}

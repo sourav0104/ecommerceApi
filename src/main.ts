@@ -3,12 +3,15 @@ import { NestExpressApplication } from "@nestjs/platform-express";
 import { AppModule } from "./app.module";
 import { SwaggerModule, DocumentBuilder } from "@nestjs/swagger";
 import { ValidationPipe } from "@nestjs/common";
+import * as helmet from 'helmet';
+import * as rateLimit from 'express-rate-limit';
 
 // boostraping : initialising or setting up the application
 async function bootstrap() {
     const app = await NestFactory.create<NestExpressApplication>(AppModule);
     app.useGlobalPipes(new ValidationPipe()); // enable app level validation for request data
     app.enableCors();
+    app.use(helmet());
     // SWAGGER CONFIG
     const config = new DocumentBuilder()
         .setTitle("My Api")
@@ -17,7 +20,7 @@ async function bootstrap() {
         .build();
     const document = SwaggerModule.createDocument(app, config);
     SwaggerModule.setup("api-docs", app, document);
-
+    app.enableCors();
     await app.listen(5000);
 }
 bootstrap();
